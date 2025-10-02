@@ -1,7 +1,10 @@
 import { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import styles from "./Navbar.module.css";
 import logoFigura from "../../assets/Icon (Figura).png";
 import logoTexto from "../../assets/Icon (Texto).png";
+import notificacoes from "../../assets/notificacoes.png";
+import perfil from "../../assets/perfil.jpg";
 
 type MenuName = "cadastros" | "vendas" | "estoque" | "financeiro";
 
@@ -49,6 +52,7 @@ export default function Navbar() {
         </div>
 
         <div className={styles.menu}>
+          {/* --- Cadastros --- */}
           <div className={styles.menuItem}>
             <button
               ref={(el) => {
@@ -63,13 +67,20 @@ export default function Navbar() {
                 className={styles.dropdown}
                 style={{ top: `${menuPos.top}px`, left: `${menuPos.left}px` }}
               >
-                <li>Clientes</li>
-                <li>Fornecedores</li>
-                <li>Produtos</li>
+                <li>
+                  <Link to="/clientes">Clientes</Link>
+                </li>
+                <li>
+                  <Link to="/fornecedores">Fornecedores</Link>
+                </li>
+                <li>
+                  <Link to="/produtos">Produtos</Link>
+                </li>
               </ul>
             )}
           </div>
 
+          {/* --- Vendas --- */}
           <div className={styles.menuItem}>
             <button
               ref={(el) => {
@@ -84,12 +95,17 @@ export default function Navbar() {
                 className={styles.dropdown}
                 style={{ top: `${menuPos.top}px`, left: `${menuPos.left}px` }}
               >
-                <li>Pedidos</li>
-                <li>Relatórios de Vendas</li>
+                <li>
+                  <Link to="/pedidos">Pedidos</Link>
+                </li>
+                <li>
+                  <Link to="/relatorios-vendas">Relatórios de Vendas</Link>
+                </li>
               </ul>
             )}
           </div>
 
+          {/* --- Estoque --- */}
           <div className={styles.menuItem}>
             <button
               ref={(el) => {
@@ -104,12 +120,17 @@ export default function Navbar() {
                 className={styles.dropdown}
                 style={{ top: `${menuPos.top}px`, left: `${menuPos.left}px` }}
               >
-                <li>Inventário</li>
-                <li>Entrada de Produtos</li>
+                <li>
+                  <Link to="/inventario">Inventário</Link>
+                </li>
+                <li>
+                  <Link to="/entrada-produtos">Entrada de Produtos</Link>
+                </li>
               </ul>
             )}
           </div>
 
+          {/* --- Financeiro --- */}
           <div className={styles.menuItem}>
             <button
               ref={(el) => {
@@ -124,10 +145,20 @@ export default function Navbar() {
                 className={styles.dropdown}
                 style={{ top: `${menuPos.top}px`, left: `${menuPos.left}px` }}
               >
-                <li>Fechamento de Caixa</li>
-                <li>Fluxo de Caixa</li>
-                <li>Contas a Pagar</li>
-                <li>Relatórios Financeiros</li>
+                <li>
+                  <Link to="/fechamento-caixa">Fechamento de Caixa</Link>
+                </li>
+                <li>
+                  <Link to="/fluxo-caixa">Fluxo de Caixa</Link>
+                </li>
+                <li>
+                  <Link to="/contas-pagar">Contas a Pagar</Link>
+                </li>
+                <li>
+                  <Link to="/relatorios-financeiros">
+                    Relatórios Financeiros
+                  </Link>
+                </li>
               </ul>
             )}
           </div>
@@ -135,8 +166,12 @@ export default function Navbar() {
       </div>
 
       <div className={styles.right}>
-        <img src="" alt="notificações" />
-        <img src="" alt="perfil" />
+        <img
+          className={styles.notificacoes}
+          src={notificacoes}
+          alt="notificações"
+        />
+        <img className={styles.perfil} src={perfil} alt="perfil" />
       </div>
     </nav>
   );
