@@ -17,8 +17,8 @@ export default function Login() {
           <img src={logo} className={styles.logo} alt="logo" />
         </div>
         <form>
-          <Input label="Nome" placeholder="Digite seu nome" />
-          <Input label="Email" type="email" placeholder="Digite seu email" />
+          <Input label="Usuário" placeholder="Digite seu usuário" />
+          <Input label="Senha" type="password" placeholder="Digite sua senha" />
         </form>
         <div className={styles.forgotPassword}>
           <a href="/recuperar-senha" className={styles.forgotPassword}>
