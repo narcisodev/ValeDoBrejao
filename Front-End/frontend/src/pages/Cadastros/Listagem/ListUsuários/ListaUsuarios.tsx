@@ -57,7 +57,6 @@ export default function Usuarios() {
             options={[
               { label: "Nome", value: "nome" },
               { label: "CPF", value: "cpf" },
-              { label: "Cargo", value: "cargo" },
             ]}
             value={filtro}
             onChange={setFiltro}
