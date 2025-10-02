@@ -47,8 +47,10 @@ export default function Navbar() {
     <nav className={styles.navbar}>
       <div className={styles.left}>
         <div className={styles.logo}>
-          <img src={logoFigura} alt="logoFigura" />
-          <img src={logoTexto} alt="LogoTexto" />
+          <Link to="/">
+            <img src={logoFigura} alt="logoFigura" />
+            <img src={logoTexto} alt="LogoTexto" />
+          </Link>
         </div>
 
         <div className={styles.menu}>
