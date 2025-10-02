@@ -70,7 +70,7 @@ export default function Navbar() {
                 style={{ top: `${menuPos.top}px`, left: `${menuPos.left}px` }}
               >
                 <li>
-                  <Link to="/clientes">Clientes</Link>
+                  <Link to="/usuarios">Usuários</Link>
                 </li>
                 <li>
                   <Link to="/fornecedores">Fornecedores</Link>
@@ -98,7 +98,10 @@ export default function Navbar() {
                 style={{ top: `${menuPos.top}px`, left: `${menuPos.left}px` }}
               >
                 <li>
-                  <Link to="/pedidos">Pedidos</Link>
+                  <Link to="/pedidos">Registrar Venda</Link>
+                </li>
+                <li>
+                  <Link to="/historico-vendas">Histórico de Vendas</Link>
                 </li>
                 <li>
                   <Link to="/relatorios-vendas">Relatórios de Vendas</Link>
@@ -123,10 +126,17 @@ export default function Navbar() {
                 style={{ top: `${menuPos.top}px`, left: `${menuPos.left}px` }}
               >
                 <li>
-                  <Link to="/inventario">Inventário</Link>
+                  <Link to="/inventario">Inventário Geral</Link>
                 </li>
                 <li>
-                  <Link to="/entrada-produtos">Entrada de Produtos</Link>
+                  <Link to="/movimentacao-produtos">
+                    Histórico de Movimentação
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/baixo-estoque-produtos">
+                    Produtos de Baixo Estoque
+                  </Link>
                 </li>
               </ul>
             )}
