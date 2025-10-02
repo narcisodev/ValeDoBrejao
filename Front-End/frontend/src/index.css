@@ -7,3 +7,22 @@
 body {
   background-color: #ece3d2;
 }
+section {
+  width: 100%;
+  height: calc(100% - 60px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bloco {
+  background-color: #fff7e7;
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.bloco div {
+  margin: 8px;
+}

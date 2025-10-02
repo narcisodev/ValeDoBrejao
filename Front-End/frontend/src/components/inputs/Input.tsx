@@ -1,5 +1,4 @@
-import React from "react";
-import styles from "./input.module.css";
+import styles from "./styles.module.css";
 
 interface InputProps {
   label: string;
@@ -7,6 +6,8 @@ interface InputProps {
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  className?: string; // para o input
+  labelClass?: string; // para o label
 }
 
 export default function Input({
@@ -15,16 +16,18 @@ export default function Input({
   placeholder,
   value,
   onChange,
+  className,
+  labelClass,
 }: InputProps) {
   return (
     <div className={styles.container}>
-      <label className={styles.label}>{label}</label>
+      <label className={`${styles.label} ${labelClass || ""}`}>{label}</label>
       <input
-        className={styles.inputField}
         type={type}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        className={`${styles.inputField} ${className || ""}`}
       />
     </div>
   );

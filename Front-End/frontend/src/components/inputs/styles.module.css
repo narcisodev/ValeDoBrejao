@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.label {
+  font-weight: 700;
+  margin-bottom: 4px;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  color: #333;
+}
+
+.inputField {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.inputField:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
