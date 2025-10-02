@@ -45,11 +45,10 @@ export default function Usuarios() {
       <section>
         <div className="bloco">
           <SelectFilter
-            label="Filtrar por cargo"
+            label="Filtrar por:"
             options={[
-              { label: "Administrador", value: "admin" },
-              { label: "Vendedor", value: "vendedor" },
-              { label: "Estoquista", value: "estoquista" },
+              { label: "Fornecedor", value: "fornecedor" },
+              { label: "CNPJ", value: "cnpj" },
             ]}
             value={filtro}
             onChange={setFiltro}
