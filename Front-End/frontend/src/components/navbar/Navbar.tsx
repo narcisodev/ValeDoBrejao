@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import styles from "./Navbar.module.css";
+import styles from "./navbar.module.css";
 import logoFigura from "../../assets/Icon (Figura).png";
 import logoTexto from "../../assets/Icon (Texto).png";
 import notificacoes from "../../assets/notificacoes.png";
