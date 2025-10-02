@@ -11,7 +11,12 @@ type MenuName = "cadastros" | "vendas" | "estoque" | "financeiro";
 export default function Navbar() {
   const [openMenu, setOpenMenu] = useState<MenuName | null>(null);
   const [menuPos, setMenuPos] = useState({ top: 0, left: 0 });
+
+  // Refs para os botões e dropdowns
   const buttonRefs = useRef<{ [key in MenuName]?: HTMLButtonElement | null }>(
+    {}
+  );
+  const dropdownRefs = useRef<{ [key in MenuName]?: HTMLUListElement | null }>(
     {}
   );
 
@@ -34,14 +39,45 @@ export default function Navbar() {
   // Fecha dropdown ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const clickedOnButton = Object.values(buttonRefs.current).some(
+      const clickedInsideButton = Object.values(buttonRefs.current).some(
         (btn) => btn && btn.contains(event.target as Node)
       );
-      if (!clickedOnButton) setOpenMenu(null);
+      const clickedInsideDropdown = Object.values(dropdownRefs.current).some(
+        (ul) => ul && ul.contains(event.target as Node)
+      );
+
+      if (!clickedInsideButton && !clickedInsideDropdown) {
+        setOpenMenu(null);
+      }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const renderDropdown = (
+    menu: MenuName,
+    links: { to: string; label: string }[]
+  ) => {
+    if (openMenu !== menu) return null;
+    return (
+      <ul
+        ref={(el: HTMLUListElement | null) => {
+          dropdownRefs.current[menu] = el;
+        }}
+        className={styles.dropdown}
+        style={{ top: `${menuPos.top}px`, left: `${menuPos.left}px` }}
+      >
+        {links.map((link) => (
+          <li key={link.to}>
+            <Link to={link.to} onClick={() => setOpenMenu(null)}>
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    );
+  };
 
   return (
     <nav className={styles.navbar}>
@@ -54,7 +90,7 @@ export default function Navbar() {
         </div>
 
         <div className={styles.menu}>
-          {/* --- Cadastros --- */}
+          {/* Cadastros */}
           <div className={styles.menuItem}>
             <button
               ref={(el) => {
@@ -64,25 +100,14 @@ export default function Navbar() {
             >
               Cadastros
             </button>
-            {openMenu === "cadastros" && (
-              <ul
-                className={styles.dropdown}
-                style={{ top: `${menuPos.top}px`, left: `${menuPos.left}px` }}
-              >
-                <li>
-                  <Link to="/usuarios">Usuários</Link>
-                </li>
-                <li>
-                  <Link to="/fornecedores">Fornecedores</Link>
-                </li>
-                <li>
-                  <Link to="/produtos">Produtos</Link>
-                </li>
-              </ul>
-            )}
+            {renderDropdown("cadastros", [
+              { to: "/usuarios", label: "Usuários" },
+              { to: "/fornecedores", label: "Fornecedores" },
+              { to: "/produtos", label: "Produtos" },
+            ])}
           </div>
 
-          {/* --- Vendas --- */}
+          {/* Vendas */}
           <div className={styles.menuItem}>
             <button
               ref={(el) => {
@@ -92,25 +117,14 @@ export default function Navbar() {
             >
               Vendas
             </button>
-            {openMenu === "vendas" && (
-              <ul
-                className={styles.dropdown}
-                style={{ top: `${menuPos.top}px`, left: `${menuPos.left}px` }}
-              >
-                <li>
-                  <Link to="/pedidos">Registrar Venda</Link>
-                </li>
-                <li>
-                  <Link to="/historico-vendas">Histórico de Vendas</Link>
-                </li>
-                <li>
-                  <Link to="/relatorios-vendas">Relatórios de Vendas</Link>
-                </li>
-              </ul>
-            )}
+            {renderDropdown("vendas", [
+              { to: "/registrar-venda", label: "Registrar Venda" },
+              { to: "/historico-vendas", label: "Histórico de Vendas" },
+              { to: "/relatorios-vendas", label: "Relatórios de Vendas" },
+            ])}
           </div>
 
-          {/* --- Estoque --- */}
+          {/* Estoque */}
           <div className={styles.menuItem}>
             <button
               ref={(el) => {
@@ -120,29 +134,20 @@ export default function Navbar() {
             >
               Estoque
             </button>
-            {openMenu === "estoque" && (
-              <ul
-                className={styles.dropdown}
-                style={{ top: `${menuPos.top}px`, left: `${menuPos.left}px` }}
-              >
-                <li>
-                  <Link to="/inventario">Inventário Geral</Link>
-                </li>
-                <li>
-                  <Link to="/movimentacao-produtos">
-                    Histórico de Movimentação
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/baixo-estoque-produtos">
-                    Produtos de Baixo Estoque
-                  </Link>
-                </li>
-              </ul>
-            )}
+            {renderDropdown("estoque", [
+              { to: "/inventario", label: "Inventário Geral" },
+              {
+                to: "/movimentacao-produtos",
+                label: "Histórico de Movimentação",
+              },
+              {
+                to: "/baixo-estoque-produtos",
+                label: "Produtos de Baixo Estoque",
+              },
+            ])}
           </div>
 
-          {/* --- Financeiro --- */}
+          {/* Financeiro */}
           <div className={styles.menuItem}>
             <button
               ref={(el) => {
@@ -152,27 +157,15 @@ export default function Navbar() {
             >
               Financeiro
             </button>
-            {openMenu === "financeiro" && (
-              <ul
-                className={styles.dropdown}
-                style={{ top: `${menuPos.top}px`, left: `${menuPos.left}px` }}
-              >
-                <li>
-                  <Link to="/fechamento-caixa">Fechamento de Caixa</Link>
-                </li>
-                <li>
-                  <Link to="/fluxo-caixa">Fluxo de Caixa</Link>
-                </li>
-                <li>
-                  <Link to="/contas-pagar">Contas a Pagar</Link>
-                </li>
-                <li>
-                  <Link to="/relatorios-financeiros">
-                    Relatórios Financeiros
-                  </Link>
-                </li>
-              </ul>
-            )}
+            {renderDropdown("financeiro", [
+              { to: "/fechamento-caixa", label: "Fechamento de Caixa" },
+              { to: "/fluxo-caixa", label: "Fluxo de Caixa" },
+              { to: "/contas-pagar", label: "Contas a Pagar" },
+              {
+                to: "/relatorios-financeiros",
+                label: "Relatórios Financeiros",
+              },
+            ])}
           </div>
         </div>
       </div>
