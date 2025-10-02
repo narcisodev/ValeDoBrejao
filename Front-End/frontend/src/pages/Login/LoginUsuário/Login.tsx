@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import logo from "../../assets/Icon.png";
-import Button from "../../components/buttons/Button";
-import Input from "../../components/inputs/Input";
-import styles from "../Login/styles.module.css";
+import logo from "../../../assets/Icon.png";
+import Button from "../../../components/buttons/Button";
+import Input from "../../../components/inputs/Input";
+import styles from "./styles.module.css";
 
 export default function Login() {
   const navigate = useNavigate();
