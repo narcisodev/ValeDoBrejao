@@ -7,35 +7,43 @@ import Lixo from "../../../../assets/lixo.png";
 import Editar from "../../../../assets/editar.png";
 import Button from "../../../../components/buttons/Button";
 
-interface Fornecedor {
+interface Usuario {
   id: number;
   nome: string;
-  cnpj: string;
+  cpf: string;
   contato: string;
+  email: string;
+  cargo: string;
 }
 
 export default function Usuarios() {
   const [filtro, setFiltro] = useState<string | number>("");
 
   // Dados fictícios
-  const [fornecedores] = useState<Fornecedor[]>([
+  const [usuarios] = useState<Usuario[]>([
     {
       id: 1,
-      nome: "Fornecedor 1",
-      cnpj: "00.000.000/0001-00",
-      contato: "99999-9999",
+      nome: "João Silva",
+      cpf: "123.456.789-00",
+      contato: "(99) 99999-9999",
+      email: "joao@email.com",
+      cargo: "Administrador",
     },
     {
       id: 2,
-      nome: "Fornecedor 2",
-      cnpj: "11.111.111/1111-11",
-      contato: "98888-8888",
+      nome: "Maria Souza",
+      cpf: "987.654.321-00",
+      contato: "(88) 98888-8888",
+      email: "maria@email.com",
+      cargo: "Funcionário",
     },
     {
       id: 3,
-      nome: "Fornecedor 3",
-      cnpj: "22.222.222/2222-22",
-      contato: "97777-7777",
+      nome: "Carlos Pereira",
+      cpf: "111.222.333-44",
+      contato: "(77) 97777-7777",
+      email: "carlos@email.com",
+      cargo: "Funcionário",
     },
   ]);
 
@@ -45,11 +53,11 @@ export default function Usuarios() {
       <section>
         <div className="bloco">
           <SelectFilter
-            label="Filtrar por cargo"
+            label="Filtrar por:"
             options={[
-              { label: "Administrador", value: "admin" },
-              { label: "Vendedor", value: "vendedor" },
-              { label: "Estoquista", value: "estoquista" },
+              { label: "Nome", value: "nome" },
+              { label: "CPF", value: "cpf" },
+              { label: "Cargo", value: "cargo" },
             ]}
             value={filtro}
             onChange={setFiltro}
@@ -59,28 +67,32 @@ export default function Usuarios() {
         </div>
 
         <div className={`bloco ${styles.customBloco}`}>
-          <div className={styles.fornecedoresHeader}>
-            <h1>Fornecedores</h1>
-            <Button type="submit">Adicionar</Button>
+          <div className={styles.Header}>
+            <h1>Usuários</h1>
+            <Button type="button">Adicionar</Button>
           </div>
 
           <div className={styles.tableContainer}>
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>Fornecedor</th>
-                  <th>CNPJ</th>
+                  <th>Nome</th>
+                  <th>CPF</th>
                   <th>Contato</th>
+                  <th>Email</th>
+                  <th>Cargo</th>
                   <th>Editar</th>
                   <th>Excluir</th>
                 </tr>
               </thead>
               <tbody>
-                {fornecedores.map((f) => (
-                  <tr key={f.id}>
-                    <td>{f.nome}</td>
-                    <td>{f.cnpj}</td>
-                    <td>{f.contato}</td>
+                {usuarios.map((u) => (
+                  <tr key={u.id}>
+                    <td>{u.nome}</td>
+                    <td>{u.cpf}</td>
+                    <td>{u.contato}</td>
+                    <td>{u.email}</td>
+                    <td>{u.cargo}</td>
                     <td>
                       <button className={styles.iconButton}>
                         <img src={Editar} alt="Editar" />

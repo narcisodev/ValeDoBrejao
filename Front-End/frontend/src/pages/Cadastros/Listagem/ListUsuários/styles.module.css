@@ -7,7 +7,7 @@ section {
 .customBloco {
   flex-direction: column;
 }
-.fornecedoresHeader {
+.Header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
