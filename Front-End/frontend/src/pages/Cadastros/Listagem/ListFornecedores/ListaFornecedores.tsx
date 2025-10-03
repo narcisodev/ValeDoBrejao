@@ -1,5 +1,5 @@
 import Navbar from "../../../../components/navbar/Navbar";
-import SelectFilter from "../../../../components/filtro/filtro";
+import SelectFilter from "../../../../components/filtro/Filtro";
 import styles from "./styles.module.css";
 import { useState } from "react";
 import Input from "../../../../components/inputs/Input";
