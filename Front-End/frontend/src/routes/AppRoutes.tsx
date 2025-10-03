@@ -5,6 +5,7 @@ import Main from "../pages/Main/Main";
 //Cadastros
 import Usuarios from "../pages/Cadastros/Listagem/ListUsuários/ListaUsuarios";
 import Fornecedores from "../pages/Cadastros/Listagem/ListFornecedores/ListaFornecedores";
+import Produtos from "../pages/Cadastros/Listagem/ListProdutos/ListaProdutos";
 
 export default function AppRoutes() {
   return (
@@ -13,6 +14,7 @@ export default function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/usuarios" element={<Usuarios />} />
       <Route path="/fornecedores" element={<Fornecedores />} />
+      <Route path="/produtos" element={<Produtos />} />
     </Routes>
   );
 }
