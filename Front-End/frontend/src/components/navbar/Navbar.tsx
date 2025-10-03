@@ -69,11 +69,14 @@ export default function Navbar() {
         style={{ top: `${menuPos.top}px`, left: `${menuPos.left}px` }}
       >
         {links.map((link) => (
-          <li key={link.to}>
-            <Link to={link.to} onClick={() => setOpenMenu(null)}>
-              {link.label}
-            </Link>
-          </li>
+          <Link
+            key={link.to}
+            to={link.to}
+            onClick={() => setOpenMenu(null)}
+            className={styles.dropdownItem}
+          >
+            <li>{link.label}</li>
+          </Link>
         ))}
       </ul>
     );
