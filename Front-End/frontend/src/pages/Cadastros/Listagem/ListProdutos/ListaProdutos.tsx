@@ -6,6 +6,7 @@ import Input from "../../../../components/inputs/Input";
 import Lixo from "../../../../assets/lixo.png";
 import Editar from "../../../../assets/editar.png";
 import Button from "../../../../components/buttons/Button";
+import { useNavigate } from "react-router-dom";
 
 interface Produto {
   id: number;
@@ -17,6 +18,7 @@ interface Produto {
 
 export default function Produtos() {
   const [filtro, setFiltro] = useState<string | number>("");
+  const navigate = useNavigate();
 
   // Dados fictícios
   const [produtos] = useState<Produto[]>([
@@ -65,7 +67,12 @@ export default function Produtos() {
         <div className={`bloco ${styles.customBloco}`}>
           <div className={styles.Header}>
             <h1>Produtos</h1>
-            <Button type="button">Adicionar</Button>
+            <Button
+              type="button"
+              onClick={() => navigate("/produtos/cadastro")}
+            >
+              Adicionar
+            </Button>
           </div>
 
           <div className={styles.tableContainer}>
