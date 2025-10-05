@@ -21,8 +21,11 @@ section {
   margin-bottom: 20px;
   display: flex;
   flex-direction: row;
+  min-width: 60%;
+  align-items: center;
 }
 
 .bloco div {
   margin: 8px;
+  width: 100%;
 }
