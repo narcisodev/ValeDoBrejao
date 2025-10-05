@@ -121,9 +121,12 @@ export default function Navbar() {
               Vendas
             </button>
             {renderDropdown("vendas", [
-              { to: "/registrar-venda", label: "Registrar Venda" },
-              { to: "/historico-vendas", label: "Histórico de Vendas" },
-              { to: "/relatorios-vendas", label: "Relatórios de Vendas" },
+              { to: "/vendas/registrar-venda", label: "Registrar Venda" },
+              { to: "/vendas//historico-vendas", label: "Histórico de Vendas" },
+              {
+                to: "/vendas//relatorios-vendas",
+                label: "Relatórios de Vendas",
+              },
             ])}
           </div>
 
@@ -138,13 +141,13 @@ export default function Navbar() {
               Estoque
             </button>
             {renderDropdown("estoque", [
-              { to: "/inventario", label: "Inventário Geral" },
+              { to: "/estoque/inventario", label: "Inventário Geral" },
               {
-                to: "/movimentacao-produtos",
+                to: "/estoque/movimentacao-produtos",
                 label: "Histórico de Movimentação",
               },
               {
-                to: "/baixo-estoque-produtos",
+                to: "/estoque/baixo-estoque-produtos",
                 label: "Produtos de Baixo Estoque",
               },
             ])}
@@ -161,11 +164,14 @@ export default function Navbar() {
               Financeiro
             </button>
             {renderDropdown("financeiro", [
-              { to: "/fechamento-caixa", label: "Fechamento de Caixa" },
-              { to: "/fluxo-caixa", label: "Fluxo de Caixa" },
-              { to: "/contas-pagar", label: "Contas a Pagar" },
               {
-                to: "/relatorios-financeiros",
+                to: "/financeiro/fechamento-caixa",
+                label: "Fechamento de Caixa",
+              },
+              { to: "/financeiro/fluxo-caixa", label: "Fluxo de Caixa" },
+              { to: "/financeiro/contas-pagar", label: "Contas a Pagar" },
+              {
+                to: "/financeiro/relatorios-financeiros",
                 label: "Relatórios Financeiros",
               },
             ])}
