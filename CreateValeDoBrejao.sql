@@ -20,6 +20,18 @@ CREATE TABLE funcionarios (
     ativo BOOLEAN DEFAULT TRUE
 );
 
+-- Notas Fiscais
+CREATE TABLE notas_fiscais (
+    idNota INT AUTO_INCREMENT PRIMARY KEY,
+    idVenda INT NOT NULL,
+    numero_nota VARCHAR(20) NOT NULL,
+    chave_acesso VARCHAR(44) UNIQUE,
+    data_emissao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('Emitida', 'Cancelada') DEFAULT 'Emitida',
+    FOREIGN KEY (idVenda) REFERENCES vendas(idVenda)
+);
+
+
 -- Fornecedores
 CREATE TABLE fornecedores (
     idFornecedor INT AUTO_INCREMENT PRIMARY KEY,
@@ -93,6 +105,18 @@ CREATE TABLE venda_itens (
     subtotal DECIMAL(10,2) NOT NULL,
     FOREIGN KEY (idVenda) REFERENCES vendas(idVenda),
     FOREIGN KEY (idProduto) REFERENCES produtos(idProduto)
+);
+
+CREATE TABLE venda_descontos (
+    idDesconto INT AUTO_INCREMENT PRIMARY KEY,
+    idVenda INT NOT NULL,               
+    idItem INT DEFAULT NULL,              
+    tipo ENUM('Item', 'Geral') NOT NULL,   
+    valor DECIMAL(10,2) NOT NULL,        
+    percentual DECIMAL(5,2) DEFAULT 0,    
+    data_aplicacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idVenda) REFERENCES vendas(idVenda),
+    FOREIGN KEY (idItem) REFERENCES venda_itens(idItem)
 );
 
 CREATE TABLE cancelamentos (
