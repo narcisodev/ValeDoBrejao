@@ -6,6 +6,7 @@ import Input from "../../../../components/inputs/Input";
 import Lixo from "../../../../assets/lixo.png";
 import Editar from "../../../../assets/editar.png";
 import Button from "../../../../components/buttons/Button";
+import { useNavigate } from "react-router-dom";
 
 interface Usuario {
   id: number;
@@ -18,6 +19,7 @@ interface Usuario {
 
 export default function Usuarios() {
   const [filtro, setFiltro] = useState<string | number>("");
+  const navigate = useNavigate();
 
   // Dados fictícios
   const [usuarios] = useState<Usuario[]>([
@@ -68,7 +70,12 @@ export default function Usuarios() {
         <div className={`bloco ${styles.customBloco}`}>
           <div className={styles.Header}>
             <h1>Usuários</h1>
-            <Button type="button">Adicionar</Button>
+            <Button
+              type="button"
+              onClick={() => navigate("/usuarios/cadastro")}
+            >
+              Adicionar
+            </Button>
           </div>
 
           <div className={styles.tableContainer}>
