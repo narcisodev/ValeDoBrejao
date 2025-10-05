@@ -12,6 +12,9 @@ import CadastroUsuario from "../pages/Cadastros/Cadastro/CadUsuários/CadastroUs
 import CadastroProduto from "../pages/Cadastros/Cadastro/CadProdutos/CadastroProduto";
 import CadastroFornecedor from "../pages/Cadastros/Cadastro/CadFornecedores/CadastroFornecedor";
 
+//Vendas
+import RegistrarVenda from "../pages/Vendas/Registrar Venda/RegistrarVenda";
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -26,6 +29,8 @@ export default function AppRoutes() {
 
       <Route path="/produtos" element={<Produtos />} />
       <Route path="/produtos/cadastro" element={<CadastroProduto />} />
+
+      <Route path="/vendas/registrar-venda" element={<RegistrarVenda />} />
     </Routes>
   );
 }
