@@ -6,6 +6,7 @@ interface ButtonProps {
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
+  color?: "default" | "red";
 }
 
 export default function Button({
@@ -13,10 +14,11 @@ export default function Button({
   onClick,
   type = "button",
   disabled = false,
+  color = "default",
 }: ButtonProps) {
   return (
     <button
-      className={styles.button}
+      className={`${styles.button} ${styles[color]}`}
       onClick={onClick}
       type={type}
       disabled={disabled}

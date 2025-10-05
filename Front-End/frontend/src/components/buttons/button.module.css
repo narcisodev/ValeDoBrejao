@@ -1,7 +1,5 @@
 .button {
   padding: 12px 28px;
-  background-color: #95b96b; /* azul padrão */
-  color: #fff;
   font-size: 16px;
   font-weight: 500;
   border: none;
@@ -9,10 +7,23 @@
   cursor: pointer;
   transition: background-color 0.2s;
   font-family: "Poppins", sans-serif;
+  color: #fff;
 }
 
-.button:hover {
+.default {
+  background-color: #95b96b;
+}
+
+.default:hover {
   background-color: #6d8a4c;
+}
+
+.red {
+  background-color: #d9534f;
+}
+
+.red:hover {
+  background-color: #b93d39;
 }
 
 .button:disabled {
