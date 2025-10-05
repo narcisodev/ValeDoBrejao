@@ -1,0 +1,22 @@
+div {
+  margin: 0;
+}
+h1 {
+  font-size: 36px;
+  color: #222222;
+}
+h3 {
+  font-size: 18px;
+  color: #333333;
+}
+hr {
+  border: none;
+  height: 1px;
+  background-color: #353535;
+  margin: 8px;
+}
+.inputs {
+  display: flex;
+  flex-direction: row;
+  margin: 0 !important;
+}
