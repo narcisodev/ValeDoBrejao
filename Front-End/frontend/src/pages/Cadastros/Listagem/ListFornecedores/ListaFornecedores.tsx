@@ -6,6 +6,7 @@ import Input from "../../../../components/inputs/Input";
 import Lixo from "../../../../assets/lixo.png";
 import Editar from "../../../../assets/editar.png";
 import Button from "../../../../components/buttons/Button";
+import { useNavigate } from "react-router-dom";
 
 interface Fornecedor {
   id: number;
@@ -16,6 +17,7 @@ interface Fornecedor {
 
 export default function Usuarios() {
   const [filtro, setFiltro] = useState<string | number>("");
+  const navigate = useNavigate();
 
   // Dados fictícios
   const [fornecedores] = useState<Fornecedor[]>([
@@ -60,7 +62,12 @@ export default function Usuarios() {
         <div className={`bloco ${styles.customBloco}`}>
           <div className={styles.Header}>
             <h1>Fornecedores</h1>
-            <Button type="submit">Adicionar</Button>
+            <Button
+              type="submit"
+              onClick={() => navigate("/fornecedores/cadastro")}
+            >
+              Adicionar
+            </Button>
           </div>
 
           <div className={styles.tableContainer}>
