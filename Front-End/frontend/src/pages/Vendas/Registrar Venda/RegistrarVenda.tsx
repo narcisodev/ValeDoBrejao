@@ -381,7 +381,6 @@ export default function RegistrarVenda() {
                               );
                               if (isNaN(valor)) valor = 0;
 
-                              // aplica o limite diretamente sem criar variável
                               atualizarValorForma(
                                 f.id,
                                 Math.min(
@@ -424,9 +423,9 @@ export default function RegistrarVenda() {
             </div>
 
             {valorComDesconto - totalSelecionado() <= 0 && (
-              <span style={{ color: "green", fontWeight: "bold" }}>
+              <div className={styles.confirmacaoPagamentoTotal}>
                 Total completo! Pode confirmar.
-              </span>
+              </div>
             )}
           </div>
 
