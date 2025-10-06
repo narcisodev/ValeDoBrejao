@@ -99,7 +99,9 @@ export default function HistoricoVenda() {
                     <td>
                       <button
                         className={styles.iconButton}
-                        onClick={() => navigate(`/vendas/${v.id}`)}
+                        onClick={() =>
+                          navigate(`/vendas/historico/buscar/${v.id}`)
+                        }
                       >
                         <img src={Info} alt="Detalhes" />
                       </button>
