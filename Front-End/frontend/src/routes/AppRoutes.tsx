@@ -14,6 +14,8 @@ import CadastroFornecedor from "../pages/Cadastros/Cadastro/CadFornecedores/Cada
 
 //Vendas
 import RegistrarVenda from "../pages/Vendas/Registrar Venda/RegistrarVenda";
+import HistoricoVenda from "../pages/Vendas/Histórico de Vendas/HistoricoVendas";
+import VendaDetalhes from "../pages/Vendas/VendasDetalhes/VendaDetalhe";
 
 export default function AppRoutes() {
   return (
@@ -31,6 +33,8 @@ export default function AppRoutes() {
       <Route path="/produtos/cadastro" element={<CadastroProduto />} />
 
       <Route path="/vendas/registrar-venda" element={<RegistrarVenda />} />
+      <Route path="/vendas/historico" element={<HistoricoVenda />} />
+      <Route path="/vendas/:id" element={<VendaDetalhes />} />
     </Routes>
   );
 }
