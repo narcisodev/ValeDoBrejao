@@ -363,9 +363,6 @@ export default function RegistrarVenda() {
               <tbody>
                 {formasPagamentoSelecionadas.length > 0 ? (
                   formasPagamentoSelecionadas.map((f) => {
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    const restante =
-                      valorComDesconto - (totalSelecionado() - f.valor);
                     return (
                       <tr key={f.id}>
                         <td>{f.forma}</td>
