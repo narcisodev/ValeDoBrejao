@@ -122,9 +122,9 @@ export default function Navbar() {
             </button>
             {renderDropdown("vendas", [
               { to: "/vendas/registrar-venda", label: "Registrar Venda" },
-              { to: "/vendas//historico-vendas", label: "Histórico de Vendas" },
+              { to: "/vendas/historico", label: "Histórico de Vendas" },
               {
-                to: "/vendas//relatorios-vendas",
+                to: "/vendas/relatorios",
                 label: "Relatórios de Vendas",
               },
             ])}
