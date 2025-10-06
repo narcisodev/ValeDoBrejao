@@ -32,9 +32,9 @@ export default function AppRoutes() {
       <Route path="/produtos" element={<Produtos />} />
       <Route path="/produtos/cadastro" element={<CadastroProduto />} />
 
-      <Route path="/vendas/registrar-venda" element={<RegistrarVenda />} />
+      <Route path="/vendas/registrar" element={<RegistrarVenda />} />
       <Route path="/vendas/historico" element={<HistoricoVenda />} />
-      <Route path="/vendas/:id" element={<VendaDetalhes />} />
+      <Route path="/vendas/historico/buscar/:id" element={<VendaDetalhes />} />
     </Routes>
   );
 }
