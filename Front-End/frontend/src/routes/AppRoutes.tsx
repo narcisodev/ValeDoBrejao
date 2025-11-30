@@ -17,6 +17,13 @@ import RegistrarVenda from "../pages/Vendas/Registrar Venda/RegistrarVenda";
 import HistoricoVenda from "../pages/Vendas/Histórico de Vendas/HistoricoVendas";
 import VendaDetalhes from "../pages/Vendas/VendasDetalhes/VendaDetalhe";
 
+//Estoque
+import InventarioGeral from "../pages/Estoque/InventárioGeral/InventarioGeral";
+import MovimentacoesEstoque from "../pages/Estoque/MovimentaçõesEstoque/MovimentacoesEstoque";
+
+//Financeiro
+import FechamentoCaixa from "../pages/Financeiro/Fechamento de Caixa/FechamentoCaixa";
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -35,6 +42,14 @@ export default function AppRoutes() {
       <Route path="/vendas/registrar" element={<RegistrarVenda />} />
       <Route path="/vendas/historico" element={<HistoricoVenda />} />
       <Route path="/vendas/historico/buscar/:id" element={<VendaDetalhes />} />
+
+      <Route path="/estoque/inventario" element={<InventarioGeral />} />
+      <Route path="/estoque/movimentacao" element={<MovimentacoesEstoque />} />
+
+      <Route
+        path="/financeiro/fechamento-caixa"
+        element={<FechamentoCaixa />}
+      />
     </Routes>
   );
 }

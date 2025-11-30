@@ -143,8 +143,8 @@ export default function Navbar() {
             {renderDropdown("estoque", [
               { to: "/estoque/inventario", label: "Inventário Geral" },
               {
-                to: "/estoque/movimentacao-produtos",
-                label: "Histórico de Movimentação",
+                to: "/estoque/movimentacao",
+                label: "Movimentação de Estoque",
               },
               {
                 to: "/estoque/baixo-estoque-produtos",

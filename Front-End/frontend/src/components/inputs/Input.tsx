@@ -6,8 +6,9 @@ interface InputProps {
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  className?: string; // para o input
-  labelClass?: string; // para o label
+  className?: string;
+  labelClass?: string;
+  readOnly?: boolean; // ✔ implementado
 }
 
 export default function Input({
@@ -18,6 +19,7 @@ export default function Input({
   onChange,
   className,
   labelClass,
+  readOnly,
 }: InputProps) {
   return (
     <div className={styles.container}>
@@ -27,6 +29,7 @@ export default function Input({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        readOnly={readOnly} // ✔ aplicado corretamente
         className={`${styles.inputField} ${className || ""}`}
       />
     </div>
