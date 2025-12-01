@@ -3,6 +3,7 @@ import SelectFilter from "../../../components/filtro/Filtro";
 import styles from "./styles.module.css";
 import { useState } from "react";
 import Input from "../../../components/inputs/Input";
+import { useAtalhosGlobais } from "../../../hooks/AtalhosGlobais";
 
 interface MovimentacaoEstoque {
   id: number;
@@ -17,6 +18,7 @@ interface MovimentacaoEstoque {
 
 export default function MovimentacoesEstoque() {
   const [filtro, setFiltro] = useState<string | number>("");
+  useAtalhosGlobais();
 
   const [movimentacoes] = useState<MovimentacaoEstoque[]>([
     {
