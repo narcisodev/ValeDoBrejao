@@ -23,6 +23,7 @@ import MovimentacoesEstoque from "../pages/Estoque/MovimentaçõesEstoque/Movime
 
 //Financeiro
 import FechamentoCaixa from "../pages/Financeiro/Fechamento de Caixa/FechamentoCaixa";
+import FluxoCaixa from "../pages/Financeiro/Fluxo de Caixa/FluxoCaixa";
 
 export default function AppRoutes() {
   return (
@@ -50,6 +51,7 @@ export default function AppRoutes() {
         path="/financeiro/fechamento-caixa"
         element={<FechamentoCaixa />}
       />
+      <Route path="/financeiro/fluxo-caixa" element={<FluxoCaixa />} />
     </Routes>
   );
 }
