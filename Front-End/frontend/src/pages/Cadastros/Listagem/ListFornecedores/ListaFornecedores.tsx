@@ -7,6 +7,7 @@ import Lixo from "../../../../assets/lixo.png";
 import Editar from "../../../../assets/editar.png";
 import Button from "../../../../components/buttons/Button";
 import { useNavigate } from "react-router-dom";
+import { useAtalhosGlobais } from "../../../../hooks/AtalhosGlobais";
 
 interface Fornecedor {
   id: number;
@@ -18,6 +19,7 @@ interface Fornecedor {
 export default function Usuarios() {
   const [filtro, setFiltro] = useState<string | number>("");
   const navigate = useNavigate();
+  useAtalhosGlobais();
 
   // Dados fictícios
   const [fornecedores] = useState<Fornecedor[]>([

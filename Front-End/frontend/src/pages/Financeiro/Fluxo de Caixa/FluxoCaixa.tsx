@@ -3,6 +3,7 @@ import SelectFilter from "../../../components/filtro/Filtro";
 import Input from "../../../components/inputs/Input";
 import styles from "./styles.module.css";
 import { useState } from "react";
+import { useAtalhosGlobais } from "../../../hooks/AtalhosGlobais";
 
 interface MovimentoCaixa {
   id: number;
@@ -15,6 +16,7 @@ interface MovimentoCaixa {
 export default function FluxoDeCaixa() {
   const [filtro, setFiltro] = useState<string | number>("");
   const [busca, setBusca] = useState("");
+  useAtalhosGlobais();
 
   const [movimentos] = useState<MovimentoCaixa[]>([
     {

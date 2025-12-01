@@ -5,10 +5,12 @@ import Navbar from "../../../../components/navbar/Navbar";
 import styles from "./styles.module.css";
 import Button from "../../../../components/buttons/Button";
 import { useNavigate } from "react-router-dom";
+import { useAtalhosGlobais } from "../../../../hooks/AtalhosGlobais";
 
 export default function CadastroUsuario() {
   const [cargo, setCargo] = useState<string | number>("");
   const navigate = useNavigate();
+  useAtalhosGlobais();
 
   return (
     <>

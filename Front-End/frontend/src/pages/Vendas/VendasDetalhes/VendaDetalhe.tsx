@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../../../components/navbar/Navbar";
 import Button from "../../../components/buttons/Button";
 import styles from "./styles.module.css";
+import { useAtalhosGlobais } from "../../../hooks/AtalhosGlobais";
 
 interface ItemVenda {
   idProduto: number;
@@ -14,6 +15,7 @@ interface ItemVenda {
 export default function VendaDetalhes() {
   const { id } = useParams();
   const navigate = useNavigate();
+  useAtalhosGlobais();
 
   const venda = {
     id,

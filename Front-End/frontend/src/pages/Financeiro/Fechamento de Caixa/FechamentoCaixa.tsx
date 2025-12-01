@@ -4,9 +4,11 @@ import Button from "../../../components/buttons/Button";
 import Input from "../../../components/inputs/Input";
 import Navbar from "../../../components/navbar/Navbar";
 import styles from "./styles.module.css";
+import { useAtalhosGlobais } from "../../../hooks/AtalhosGlobais";
 
 export default function FechamentoCaixa() {
   const navigate = useNavigate();
+  useAtalhosGlobais();
 
   // Totais do sistema (fixos por enquanto)
   const totais = {

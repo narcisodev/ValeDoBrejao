@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Input from "../../../components/inputs/Input";
 import styles from "./styles.module.css";
 import Info from "../../../assets/info.png";
+import { useAtalhosGlobais } from "../../../hooks/AtalhosGlobais";
 
 interface Venda {
   id: number;
@@ -17,6 +18,7 @@ interface Venda {
 export default function HistoricoVenda() {
   const [filtro, setFiltro] = useState<string | number>("");
   const navigate = useNavigate();
+  useAtalhosGlobais();
 
   const [vendas] = useState<Venda[]>([
     {

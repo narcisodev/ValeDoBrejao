@@ -6,6 +6,7 @@ import lixo from "../../../assets/lixo.png";
 import styles from "./styles.module.css";
 import Modal from "../../../components/modal/Modal";
 import SelectFilter from "../../../components/filtro/Filtro";
+import { useAtalhosGlobais } from "../../../hooks/AtalhosGlobais";
 
 interface ItemVenda {
   idProduto: number;
@@ -32,6 +33,8 @@ interface FormaPagamento {
 }
 
 export default function RegistrarVenda() {
+  useAtalhosGlobais();
+
   const [produtoInput, setProdutoInput] = useState("");
   const [quantidade, setQuantidade] = useState(1);
   const [itens, setItens] = useState<ItemVenda[]>([]);
