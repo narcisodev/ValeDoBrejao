@@ -6,49 +6,64 @@ import logoTexto from "../../assets/Icon (Texto).png";
 import notificacoes from "../../assets/notificacoes.png";
 import perfil from "../../assets/perfil.jpg";
 
-type MenuName = "cadastros" | "vendas" | "estoque" | "financeiro";
+type MenuName = "cadastros" | "vendas" | "estoque" | "financeiro" | "perfil";
 
 export default function Navbar() {
   const [openMenu, setOpenMenu] = useState<MenuName | null>(null);
   const [menuPos, setMenuPos] = useState({ top: 0, left: 0 });
 
-  // Refs para os botões e dropdowns
-  const buttonRefs = useRef<{ [key in MenuName]?: HTMLButtonElement | null }>(
-    {}
-  );
+  const buttonRefs = useRef<{
+    [key in MenuName]?: HTMLButtonElement | HTMLImageElement | null;
+  }>({});
+
   const dropdownRefs = useRef<{ [key in MenuName]?: HTMLUListElement | null }>(
     {}
   );
+
+  // ==== AUTO-FLIP PROFISSIONAL ====
+  const calculateDropdownPosition = (menu: MenuName) => {
+    const btn = buttonRefs.current[menu];
+    const dropdown = dropdownRefs.current[menu];
+    if (!btn || !dropdown) return;
+
+    const btnRect = btn.getBoundingClientRect();
+    const dropRect = dropdown.getBoundingClientRect();
+
+    let left = btnRect.left + window.scrollX;
+    const spaceRight = window.innerWidth - (btnRect.left + dropRect.width);
+
+    if (spaceRight < 10) {
+      left = btnRect.right - dropRect.width + window.scrollX;
+    }
+
+    if (left < 10) left = 10;
+
+    setMenuPos({
+      top: btnRect.bottom + window.scrollY,
+      left,
+    });
+  };
 
   const toggleMenu = (menu: MenuName) => {
     if (openMenu === menu) {
       setOpenMenu(null);
     } else {
-      const btn = buttonRefs.current[menu];
-      if (btn) {
-        const rect = btn.getBoundingClientRect();
-        setMenuPos({
-          top: rect.bottom + window.scrollY,
-          left: rect.left + window.scrollX,
-        });
-      }
       setOpenMenu(menu);
+      setTimeout(() => calculateDropdownPosition(menu), 5);
     }
   };
 
-  // Fecha dropdown ao clicar fora
+  // Fecha ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const clickedInsideButton = Object.values(buttonRefs.current).some(
+      const insideButton = Object.values(buttonRefs.current).some(
         (btn) => btn && btn.contains(event.target as Node)
       );
-      const clickedInsideDropdown = Object.values(dropdownRefs.current).some(
-        (ul) => ul && ul.contains(event.target as Node)
+      const insideDropdown = Object.values(dropdownRefs.current).some(
+        (drop) => drop && drop.contains(event.target as Node)
       );
 
-      if (!clickedInsideButton && !clickedInsideDropdown) {
-        setOpenMenu(null);
-      }
+      if (!insideButton && !insideDropdown) setOpenMenu(null);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -57,16 +72,20 @@ export default function Navbar() {
 
   const renderDropdown = (
     menu: MenuName,
-    links: { to: string; label: string }[]
+    links: { to: string; label: string; icon?: string }[]
   ) => {
     if (openMenu !== menu) return null;
+
     return (
       <ul
-        ref={(el: HTMLUListElement | null) => {
-          dropdownRefs.current[menu] = el;
+        ref={(el) => {
+          dropdownRefs.current[menu] = el; // << corrigido (sem return)
         }}
         className={styles.dropdown}
-        style={{ top: `${menuPos.top}px`, left: `${menuPos.left}px` }}
+        style={{
+          top: `${menuPos.top}px`,
+          left: `${menuPos.left}px`,
+        }}
       >
         {links.map((link) => (
           <Link
@@ -75,7 +94,12 @@ export default function Navbar() {
             onClick={() => setOpenMenu(null)}
             className={styles.dropdownItem}
           >
-            <li>{link.label}</li>
+            <li>
+              {link.icon && (
+                <span style={{ marginRight: "8px" }}>{link.icon}</span>
+              )}
+              {link.label}
+            </li>
           </Link>
         ))}
       </ul>
@@ -123,10 +147,7 @@ export default function Navbar() {
             {renderDropdown("vendas", [
               { to: "/vendas/registrar", label: "Registrar Venda" },
               { to: "/vendas/historico", label: "Histórico de Vendas" },
-              {
-                to: "/vendas/relatorios",
-                label: "Relatórios de Vendas",
-              },
+              { to: "/vendas/relatorios", label: "Relatórios de Vendas" },
             ])}
           </div>
 
@@ -142,10 +163,7 @@ export default function Navbar() {
             </button>
             {renderDropdown("estoque", [
               { to: "/estoque/inventario", label: "Inventário Geral" },
-              {
-                to: "/estoque/movimentacao",
-                label: "Movimentação de Estoque",
-              },
+              { to: "/estoque/movimentacao", label: "Movimentação de Estoque" },
               {
                 to: "/estoque/baixo-estoque-produtos",
                 label: "Produtos de Baixo Estoque",
@@ -179,13 +197,30 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* Perfil */}
       <div className={styles.right}>
         <img
           className={styles.notificacoes}
           src={notificacoes}
           alt="notificações"
         />
-        <img className={styles.perfil} src={perfil} alt="perfil" />
+
+        <img
+          className={styles.perfil}
+          src={perfil}
+          alt="perfil"
+          ref={(el) => {
+            buttonRefs.current["perfil"] = el;
+          }}
+          onClick={() => toggleMenu("perfil")}
+        />
+
+        {renderDropdown("perfil", [
+          { to: "/meu-perfil", label: "Meu Perfil", icon: "👤" },
+          { to: "/configuracoes", label: "Configurações", icon: "⚙️" },
+          { to: "/ajuda", label: "Ajuda", icon: "❓" },
+          { to: "/logout", label: "Sair", icon: "🚪" },
+        ])}
       </div>
     </nav>
   );
