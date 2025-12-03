@@ -1,0 +1,32 @@
+// Valida se o CPF é válido
+export function validarCPF(cpf: string): boolean {
+  cpf = cpf.replace(/[^\d]+/g, "");
+  if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+
+  let soma = 0;
+  for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
+  let resto = (soma * 10) % 11;
+  if (resto === 10 || resto === 11) resto = 0;
+  if (resto !== parseInt(cpf.charAt(9))) return false;
+
+  soma = 0;
+  for (let i = 0; i < 10; i++) soma += parseInt(cpf.charAt(i)) * (11 - i);
+  resto = (soma * 10) % 11;
+  if (resto === 10 || resto === 11) resto = 0;
+  if (resto !== parseInt(cpf.charAt(10))) return false;
+
+  return true;
+}
+
+// Valida se a data está no formato YYYY-MM-DD e não é futura
+export function validarData(data: string): boolean {
+  const d = new Date(data);
+  if (isNaN(d.getTime())) return false; // data inválida
+  if (d > new Date()) return false; // não pode ser futura
+  return true;
+}
+
+// Valida se o salário é maior que zero
+export function validarSalario(salario: number): boolean {
+  return !isNaN(salario) && salario > 0;
+}

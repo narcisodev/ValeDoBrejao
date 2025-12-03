@@ -14,7 +14,7 @@ export interface Funcionario {
 export async function inserirFuncionario(data: Funcionario): Promise<void> {
   const sql = `
     INSERT INTO funcionarios
-    (nome, cpf, telefone, cargo, salario, admissao, usuario, senha)
+    (nome, cpf, telefone, cargo, salario, data_admissao, login, senha)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
