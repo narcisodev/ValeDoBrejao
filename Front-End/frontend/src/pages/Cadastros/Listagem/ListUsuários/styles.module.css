@@ -6,6 +6,7 @@ section {
 }
 .customBloco {
   flex-direction: column;
+  width: 80%;
 }
 .Header {
   display: flex;
@@ -17,7 +18,9 @@ section {
 }
 .tableContainer {
   width: 100%;
-  overflow-x: auto;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
@@ -25,6 +28,7 @@ section {
   width: 100%;
   border-collapse: collapse;
   font-family: "Poppins", sans-serif;
+  table-layout: fixed;
 }
 .table th {
   background-color: #95b96b;
@@ -60,4 +64,18 @@ section {
   text-align: center;
   padding: 16px;
   color: #666;
+}
+.errorMessage {
+  width: auto !important;
+  margin-top: 12px;
+  padding: 12px;
+  background-color: #ffe6e6;
+  color: #b00020;
+  border: 1px solid #b00020;
+  border-radius: 6px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
 }

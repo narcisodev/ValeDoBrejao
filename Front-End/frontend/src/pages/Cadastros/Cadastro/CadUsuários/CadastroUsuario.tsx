@@ -11,24 +11,46 @@ import { validarCPF, validarData, validarSalario } from "./validacoes";
 
 export default function CadastroUsuario() {
   const [cargo, setCargo] = useState<string>("");
+
   const [form, setForm] = useState({
     nome: "",
     cpf: "",
     telefone: "",
-    salario: "",
+    salario: 0, // <-- AGORA É NÚMERO
     admissao: "",
     usuario: "",
     senha: "",
     confirmarSenha: "",
   });
+
   const [erros, setErros] = useState<{ [key: string]: string }>({});
 
   const navigate = useNavigate();
   useAtalhosGlobais();
 
+  const formatarMoeda = (value: number) =>
+    value.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+
   const handleChange = (field: keyof typeof form, value: string) => {
+    // ----- TRATAMENTO ESPECIAL PARA O SALÁRIO -----
+    if (field === "salario") {
+      // remove tudo que não é número
+      const somenteNumeros = value.replace(/\D/g, "");
+
+      // evita NaN
+      const numero = somenteNumeros === "" ? 0 : Number(somenteNumeros) / 100;
+
+      setForm((prev) => ({ ...prev, salario: numero }));
+      setErros((prev) => ({ ...prev, salario: "" }));
+      return;
+    }
+
+    // ----- CAMPOS NORMAIS -----
     setForm((prev) => ({ ...prev, [field]: value }));
-    setErros((prev) => ({ ...prev, [field]: "" })); // limpa erro ao digitar
+    setErros((prev) => ({ ...prev, [field]: "" }));
   };
 
   const validarFormulario = (): boolean => {
@@ -43,10 +65,10 @@ export default function CadastroUsuario() {
     if (!cargo) novosErros.cargo = "Selecione o cargo";
 
     if (!form.salario) novosErros.salario = "Salário obrigatório";
-    else if (!validarSalario(form.salario))
+    else if (!validarSalario(String(form.salario)))
       novosErros.salario = "Salário inválido";
 
-    if (!form.admissao) novosErros.admissao = "Data de admissão obrigatória";
+    if (!form.admissao) novosErros.admissao = "Data obrigatória";
     else if (!validarData(form.admissao))
       novosErros.admissao = "Data inválida ou futura";
 
@@ -54,7 +76,7 @@ export default function CadastroUsuario() {
 
     if (!form.senha) novosErros.senha = "Senha obrigatória";
     if (!form.confirmarSenha) novosErros.confirmarSenha = "Confirme a senha";
-    if (form.senha && form.confirmarSenha && form.senha !== form.confirmarSenha)
+    if (form.senha !== form.confirmarSenha)
       novosErros.confirmarSenha = "As senhas não conferem";
 
     setErros(novosErros);
@@ -65,18 +87,19 @@ export default function CadastroUsuario() {
     if (!validarFormulario()) return;
 
     try {
+      const [dia, mes, ano] = form.admissao.split("/");
+
       await api.post("/funcionarios/cadastrar", {
         nome: form.nome,
         cpf: form.cpf,
         telefone: form.telefone,
         cargo,
-        salario: Number(form.salario.replace(/[^\d.-]/g, "")),
-        admissao: form.admissao,
+        salario: form.salario,
+        admissao: `${ano}-${mes}-${dia}`,
         usuario: form.usuario,
         senha: form.senha,
       });
 
-      alert("Funcionário salvo com sucesso!");
       navigate("/usuarios");
     } catch (error) {
       console.error(error);
@@ -90,7 +113,6 @@ export default function CadastroUsuario() {
       <section>
         <div className="bloco">
           <div>
-            {/* Informações Pessoais */}
             <div className={styles.secao}>
               <h1>Cadastro de Usuário</h1>
               <h3>Informações Pessoais</h3>
@@ -122,7 +144,6 @@ export default function CadastroUsuario() {
               </div>
             </div>
 
-            {/* Dados Profissionais */}
             <div className={styles.secao}>
               <h3>Dados Profissionais</h3>
               <hr />
@@ -138,13 +159,15 @@ export default function CadastroUsuario() {
                   placeholder="Selecione..."
                   error={erros.cargo}
                 />
+
                 <Input
                   label="Salário"
                   placeholder="R$ 0,00"
-                  value={form.salario}
+                  value={formatarMoeda(form.salario)} // <-- MOSTRA FORMATADO
                   onChange={(e) => handleChange("salario", e.target.value)}
                   error={erros.salario}
                 />
+
                 <Input
                   label="Data de Admissão"
                   placeholder="__/__/____"
@@ -156,7 +179,6 @@ export default function CadastroUsuario() {
               </div>
             </div>
 
-            {/* Acesso ao Sistema */}
             <div className={styles.secao}>
               <h3>Acesso ao Sistema</h3>
               <hr />
@@ -198,6 +220,7 @@ export default function CadastroUsuario() {
                 Cancelar
               </Button>
             </div>
+
             <div>
               <Button type="button" onClick={salvar}>
                 Salvar

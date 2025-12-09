@@ -1,55 +1,73 @@
 import Navbar from "../../../../components/navbar/Navbar";
 import SelectFilter from "../../../../components/filtro/Filtro";
 import styles from "./styles.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Input from "../../../../components/inputs/Input";
 import Lixo from "../../../../assets/lixo.png";
 import Editar from "../../../../assets/editar.png";
 import Button from "../../../../components/buttons/Button";
 import { useNavigate } from "react-router-dom";
 import { useAtalhosGlobais } from "../../../../hooks/AtalhosGlobais";
+import { api } from "../../../../services/backendAPI";
+import { encrypt } from "../../../../utils/crypto";
 
 interface Usuario {
-  id: number;
   nome: string;
   cpf: string;
-  contato: string;
-  email: string;
+  telefone: string;
   cargo: string;
+  usuario: string;
 }
 
 export default function Usuarios() {
-  const [filtro, setFiltro] = useState<string | number>("");
+  const [filtroCampo, setFiltroCampo] = useState<string | number>("nome");
+  const [filtroValor, setFiltroValor] = useState<string>("");
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [erro, setErro] = useState<string>("");
   const navigate = useNavigate();
   useAtalhosGlobais();
 
-  // Dados fictícios
-  const [usuarios] = useState<Usuario[]>([
-    {
-      id: 1,
-      nome: "João Silva",
-      cpf: "123.456.789-00",
-      contato: "(99) 99999-9999",
-      email: "joao@email.com",
-      cargo: "Administrador",
-    },
-    {
-      id: 2,
-      nome: "Maria Souza",
-      cpf: "987.654.321-00",
-      contato: "(88) 98888-8888",
-      email: "maria@email.com",
-      cargo: "Funcionário",
-    },
-    {
-      id: 3,
-      nome: "Carlos Pereira",
-      cpf: "111.222.333-44",
-      contato: "(77) 97777-7777",
-      email: "carlos@email.com",
-      cargo: "Funcionário",
-    },
-  ]);
+  // Buscar usuários do backend
+  const buscarUsuarios = async () => {
+    try {
+      setErro("");
+      const { data } = await api.get<Usuario[]>("/funcionarios");
+      setUsuarios(data);
+    } catch (error) {
+      console.error("Erro ao buscar usuários:", error);
+      setErro("Erro ao buscar usuários");
+    }
+  };
+
+  useEffect(() => {
+    buscarUsuarios();
+  }, []);
+
+  // Excluir usuário
+  const excluirUsuario = async (cpf: string) => {
+    if (!window.confirm("Deseja realmente excluir este usuário?")) return;
+    try {
+      setErro("");
+
+      const cpfCriptografado = encrypt(cpf);
+
+      await api.post("/funcionarios/excluir", { id: cpfCriptografado });
+
+      setUsuarios((prev) => prev.filter((u) => u.cpf !== cpf));
+    } catch (error) {
+      console.error("Erro ao excluir usuário:", error);
+      setErro("Erro ao excluir usuário");
+    }
+  };
+
+  // Filtragem simples
+  const usuariosFiltrados = usuarios.filter((u) => {
+    if (!filtroValor) return true;
+    const valor = filtroValor.toLowerCase();
+    if (filtroCampo === "nome") return u.nome.toLowerCase().includes(valor);
+    if (filtroCampo === "cpf") return u.cpf.includes(valor);
+    return true;
+  });
 
   return (
     <>
@@ -62,11 +80,16 @@ export default function Usuarios() {
               { label: "Nome", value: "nome" },
               { label: "CPF", value: "cpf" },
             ]}
-            value={filtro}
-            onChange={setFiltro}
+            value={filtroCampo}
+            onChange={setFiltroCampo}
             placeholder="Selecione..."
           />
-          <Input label="Filtro" placeholder="Buscar..." />
+          <Input
+            label="Filtro"
+            placeholder="Buscar..."
+            value={filtroValor}
+            onChange={(e) => setFiltroValor(e.target.value)}
+          />
         </div>
 
         <div className={`bloco ${styles.customBloco}`}>
@@ -86,28 +109,34 @@ export default function Usuarios() {
                 <tr>
                   <th>Nome</th>
                   <th>CPF</th>
-                  <th>Contato</th>
-                  <th>Email</th>
+                  <th>Telefone</th>
+                  <th>Usuário</th>
                   <th>Cargo</th>
                   <th>Editar</th>
                   <th>Excluir</th>
                 </tr>
               </thead>
               <tbody>
-                {usuarios.map((u) => (
-                  <tr key={u.id}>
+                {usuariosFiltrados.map((u) => (
+                  <tr key={u.cpf}>
                     <td>{u.nome}</td>
                     <td>{u.cpf}</td>
-                    <td>{u.contato}</td>
-                    <td>{u.email}</td>
+                    <td>{u.telefone}</td>
+                    <td>{u.usuario}</td>
                     <td>{u.cargo}</td>
                     <td>
-                      <button className={styles.iconButton}>
+                      <button
+                        className={styles.iconButton}
+                        onClick={() => navigate(`/usuarios/editar/${u.cpf}`)}
+                      >
                         <img src={Editar} alt="Editar" />
                       </button>
                     </td>
                     <td>
-                      <button className={styles.iconButton}>
+                      <button
+                        className={styles.iconButton}
+                        onClick={() => excluirUsuario(u.cpf)}
+                      >
                         <img src={Lixo} alt="Excluir" />
                       </button>
                     </td>
@@ -115,6 +144,7 @@ export default function Usuarios() {
                 ))}
               </tbody>
             </table>
+            {erro && <div className={styles.errorMessage}>{erro}</div>}
           </div>
         </div>
       </section>
