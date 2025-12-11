@@ -38,4 +38,5 @@ form {
   cursor: pointer;
   transition: color 0.2s;
   font-family: "Poppins", sans-serif;
+  padding-top: 6px;
 }

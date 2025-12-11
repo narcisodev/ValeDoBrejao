@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./navbar.module.css";
 import logoFigura from "../../assets/Icon (Figura).png";
 import logoTexto from "../../assets/Icon (Texto).png";
@@ -9,6 +9,7 @@ import perfil from "../../assets/perfil.jpg";
 type MenuName = "cadastros" | "vendas" | "estoque" | "financeiro" | "perfil";
 
 export default function Navbar() {
+  const navigate = useNavigate();
   const [openMenu, setOpenMenu] = useState<MenuName | null>(null);
   const [menuPos, setMenuPos] = useState({ top: 0, left: 0 });
 
@@ -20,7 +21,6 @@ export default function Navbar() {
     {}
   );
 
-  // ==== AUTO-FLIP PROFISSIONAL ====
   const calculateDropdownPosition = (menu: MenuName) => {
     const btn = buttonRefs.current[menu];
     const dropdown = dropdownRefs.current[menu];
@@ -53,7 +53,6 @@ export default function Navbar() {
     }
   };
 
-  // Fecha ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const insideButton = Object.values(buttonRefs.current).some(
@@ -70,6 +69,13 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // ==== FUNÇÃO DE LOGOUT ====
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user_nome");
+    navigate("/login");
+  };
+
   const renderDropdown = (
     menu: MenuName,
     links: { to: string; label: string; icon?: string }[]
@@ -79,7 +85,7 @@ export default function Navbar() {
     return (
       <ul
         ref={(el) => {
-          dropdownRefs.current[menu] = el; // << corrigido (sem return)
+          dropdownRefs.current[menu] = el;
         }}
         className={styles.dropdown}
         style={{
@@ -87,21 +93,41 @@ export default function Navbar() {
           left: `${menuPos.left}px`,
         }}
       >
-        {links.map((link) => (
-          <Link
-            key={link.to}
-            to={link.to}
-            onClick={() => setOpenMenu(null)}
-            className={styles.dropdownItem}
-          >
-            <li>
-              {link.icon && (
-                <span style={{ marginRight: "8px" }}>{link.icon}</span>
-              )}
-              {link.label}
-            </li>
-          </Link>
-        ))}
+        {links.map((link) => {
+          if (link.to === "/logout") {
+            return (
+              <li
+                key={link.to}
+                className={`${styles.dropdownItem} ${styles.logout}`}
+                onClick={() => {
+                  setOpenMenu(null);
+                  handleLogout();
+                }}
+              >
+                {link.icon && (
+                  <span style={{ marginRight: "8px" }}>{link.icon}</span>
+                )}
+                {link.label}
+              </li>
+            );
+          } else {
+            return (
+              <Link
+                key={link.to}
+                to={link.to}
+                onClick={() => setOpenMenu(null)}
+                className={styles.dropdownItem}
+              >
+                <li>
+                  {link.icon && (
+                    <span style={{ marginRight: "8px" }}>{link.icon}</span>
+                  )}
+                  {link.label}
+                </li>
+              </Link>
+            );
+          }
+        })}
       </ul>
     );
   };

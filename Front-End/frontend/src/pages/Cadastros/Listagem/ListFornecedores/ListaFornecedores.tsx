@@ -1,13 +1,15 @@
 import Navbar from "../../../../components/navbar/Navbar";
 import SelectFilter from "../../../../components/filtro/Filtro";
 import styles from "./styles.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Input from "../../../../components/inputs/Input";
 import Lixo from "../../../../assets/lixo.png";
 import Editar from "../../../../assets/editar.png";
 import Button from "../../../../components/buttons/Button";
 import { useNavigate } from "react-router-dom";
 import { useAtalhosGlobais } from "../../../../hooks/AtalhosGlobais";
+import { api } from "../../../../services/backendAPI";
+import { encrypt } from "../../../../utils/crypto";
 
 interface Fornecedor {
   id: number;
@@ -16,32 +18,63 @@ interface Fornecedor {
   contato: string;
 }
 
-export default function Usuarios() {
-  const [filtro, setFiltro] = useState<string | number>("");
+export default function Fornecedores() {
+  const [filtroCampo, setFiltroCampo] = useState<string>("fornecedor");
+  const [filtroValor, setFiltroValor] = useState<string>("");
+
+  const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
+  const [erro, setErro] = useState<string>("");
+
   const navigate = useNavigate();
   useAtalhosGlobais();
 
-  // Dados fictícios
-  const [fornecedores] = useState<Fornecedor[]>([
-    {
-      id: 1,
-      nome: "Fornecedor 1",
-      cnpj: "00.000.000/0001-00",
-      contato: "99999-9999",
-    },
-    {
-      id: 2,
-      nome: "Fornecedor 2",
-      cnpj: "11.111.111/1111-11",
-      contato: "98888-8888",
-    },
-    {
-      id: 3,
-      nome: "Fornecedor 3",
-      cnpj: "22.222.222/2222-22",
-      contato: "97777-7777",
-    },
-  ]);
+  // 🔍 Buscar fornecedores da API
+  const buscarFornecedores = async () => {
+    try {
+      setErro("");
+      const { data } = await api.get<Fornecedor[]>("/fornecedores");
+      setFornecedores(data);
+    } catch (error) {
+      console.error("Erro ao buscar fornecedores:", error);
+      setErro("Erro ao buscar fornecedores");
+    }
+  };
+
+  useEffect(() => {
+    buscarFornecedores();
+  }, []);
+
+  // ❌ Excluir fornecedor com criptografia (como no módulo de usuários)
+  async function excluirFornecedor(cnpj: string) {
+    try {
+      const cnpjCriptografado = encrypt(cnpj);
+
+      await api.post("/fornecedores/excluir", { id: cnpjCriptografado });
+
+      // Atualiza a lista após excluir
+      buscarFornecedores();
+    } catch (error) {
+      console.error("Erro ao excluir fornecedor:", error);
+      setErro("Erro ao excluir fornecedor");
+    }
+  }
+
+  // 🔎 Filtro
+  const fornecedoresFiltrados = fornecedores.filter((f) => {
+    if (!filtroValor) return true;
+
+    const valor = filtroValor.toLowerCase();
+
+    if (filtroCampo === "fornecedor") {
+      return f.nome.toLowerCase().includes(valor);
+    }
+
+    if (filtroCampo === "cnpj") {
+      return f.cnpj.includes(valor);
+    }
+
+    return true;
+  });
 
   return (
     <>
@@ -54,18 +87,24 @@ export default function Usuarios() {
               { label: "Fornecedor", value: "fornecedor" },
               { label: "CNPJ", value: "cnpj" },
             ]}
-            value={filtro}
-            onChange={setFiltro}
+            value={filtroCampo}
+            onChange={(v) => setFiltroCampo(String(v))}
             placeholder="Selecione..."
           />
-          <Input label="Filtro" placeholder="Buscar..." />
+
+          <Input
+            label="Filtro"
+            placeholder="Buscar..."
+            value={filtroValor}
+            onChange={(e) => setFiltroValor(e.target.value)}
+          />
         </div>
 
         <div className={`bloco ${styles.customBloco}`}>
           <div className={styles.Header}>
             <h1>Fornecedores</h1>
             <Button
-              type="submit"
+              type="button"
               onClick={() => navigate("/fornecedores/cadastro")}
             >
               Adicionar
@@ -83,19 +122,30 @@ export default function Usuarios() {
                   <th>Excluir</th>
                 </tr>
               </thead>
+
               <tbody>
-                {fornecedores.map((f) => (
+                {fornecedoresFiltrados.map((f) => (
                   <tr key={f.id}>
                     <td>{f.nome}</td>
                     <td>{f.cnpj}</td>
                     <td>{f.contato}</td>
+
                     <td>
-                      <button className={styles.iconButton}>
+                      <button
+                        className={styles.iconButton}
+                        onClick={() =>
+                          navigate(`/fornecedores/editar/${f.cnpj}`)
+                        }
+                      >
                         <img src={Editar} alt="Editar" />
                       </button>
                     </td>
+
                     <td>
-                      <button className={styles.iconButton}>
+                      <button
+                        className={styles.iconButton}
+                        onClick={() => excluirFornecedor(f.cnpj)}
+                      >
                         <img src={Lixo} alt="Excluir" />
                       </button>
                     </td>
@@ -103,6 +153,8 @@ export default function Usuarios() {
                 ))}
               </tbody>
             </table>
+
+            {erro && <div className={styles.errorMessage}>{erro}</div>}
           </div>
         </div>
       </section>
