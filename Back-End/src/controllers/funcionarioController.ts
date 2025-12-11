@@ -27,7 +27,6 @@ export interface Funcionario {
   senha: string;
 }
 
-// Cadastrar funcionário
 export const cadastrarFuncionario = async (req: Request, res: Response) => {
   try {
     const { nome, cpf, telefone, cargo, salario, admissao, usuario, senha } =
@@ -63,7 +62,6 @@ export const cadastrarFuncionario = async (req: Request, res: Response) => {
   }
 };
 
-// Listar todos os funcionários
 export const listarFuncionarios = async (_req: Request, res: Response) => {
   try {
     const funcionarios = await FuncModel.listarFuncionarios();
@@ -74,7 +72,6 @@ export const listarFuncionarios = async (_req: Request, res: Response) => {
   }
 };
 
-// Excluir funcionário pelo CPF
 export const excluirFuncionario = async (req: Request, res: Response) => {
   try {
     const { id } = req.body;
@@ -82,6 +79,8 @@ export const excluirFuncionario = async (req: Request, res: Response) => {
 
     const bytes = CryptoJS.AES.decrypt(id, SECRET_KEY);
     const cpf = bytes.toString(CryptoJS.enc.Utf8);
+    console.log("ID RECEBIDO:", id);
+    console.log("DESCRIPTOGRAFADO:", cpf);
 
     if (!validarCPF(cpf))
       return res.status(400).json({ error: "CPF inválido" });

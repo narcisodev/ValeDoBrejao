@@ -1,4 +1,3 @@
-// Valida se o CPF é válido
 export function validarCPF(cpf: string): boolean {
   cpf = cpf.replace(/[^\d]+/g, "");
   if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
@@ -18,7 +17,6 @@ export function validarCPF(cpf: string): boolean {
   return true;
 }
 
-// Valida se a data é válida e não é futura
 export function validarData(data: string): boolean {
   const partes = data.split("/");
   if (partes.length !== 3) return false;
@@ -35,7 +33,6 @@ export function validarData(data: string): boolean {
   return true;
 }
 
-// Valida se o salário é maior que zero
 export function validarSalario(salario: string): boolean {
   const valor = Number(salario.replace(/[^\d.-]/g, ""));
   return !isNaN(valor) && valor > 0;

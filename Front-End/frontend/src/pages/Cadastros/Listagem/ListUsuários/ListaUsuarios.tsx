@@ -27,7 +27,6 @@ export default function Usuarios() {
   const navigate = useNavigate();
   useAtalhosGlobais();
 
-  // Buscar usuários do backend
   const buscarUsuarios = async () => {
     try {
       setErro("");
@@ -43,9 +42,9 @@ export default function Usuarios() {
     buscarUsuarios();
   }, []);
 
-  // Excluir usuário
   const excluirUsuario = async (cpf: string) => {
     if (!window.confirm("Deseja realmente excluir este usuário?")) return;
+
     try {
       setErro("");
 
@@ -60,7 +59,6 @@ export default function Usuarios() {
     }
   };
 
-  // Filtragem simples
   const usuariosFiltrados = usuarios.filter((u) => {
     if (!filtroValor) return true;
     const valor = filtroValor.toLowerCase();

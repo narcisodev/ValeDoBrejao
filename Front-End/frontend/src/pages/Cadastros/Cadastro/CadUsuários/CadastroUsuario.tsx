@@ -16,7 +16,7 @@ export default function CadastroUsuario() {
     nome: "",
     cpf: "",
     telefone: "",
-    salario: 0, // <-- AGORA É NÚMERO
+    salario: 0,
     admissao: "",
     usuario: "",
     senha: "",
@@ -35,20 +35,14 @@ export default function CadastroUsuario() {
     });
 
   const handleChange = (field: keyof typeof form, value: string) => {
-    // ----- TRATAMENTO ESPECIAL PARA O SALÁRIO -----
     if (field === "salario") {
-      // remove tudo que não é número
       const somenteNumeros = value.replace(/\D/g, "");
-
-      // evita NaN
       const numero = somenteNumeros === "" ? 0 : Number(somenteNumeros) / 100;
 
       setForm((prev) => ({ ...prev, salario: numero }));
       setErros((prev) => ({ ...prev, salario: "" }));
       return;
     }
-
-    // ----- CAMPOS NORMAIS -----
     setForm((prev) => ({ ...prev, [field]: value }));
     setErros((prev) => ({ ...prev, [field]: "" }));
   };
@@ -163,7 +157,7 @@ export default function CadastroUsuario() {
                 <Input
                   label="Salário"
                   placeholder="R$ 0,00"
-                  value={formatarMoeda(form.salario)} // <-- MOSTRA FORMATADO
+                  value={formatarMoeda(form.salario)}
                   onChange={(e) => handleChange("salario", e.target.value)}
                   error={erros.salario}
                 />
