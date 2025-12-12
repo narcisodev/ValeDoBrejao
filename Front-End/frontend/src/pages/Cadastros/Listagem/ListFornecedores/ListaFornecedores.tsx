@@ -10,25 +10,27 @@ import { useNavigate } from "react-router-dom";
 import { useAtalhosGlobais } from "../../../../hooks/AtalhosGlobais";
 import { api } from "../../../../services/backendAPI";
 import { encrypt } from "../../../../utils/crypto";
+import type { AxiosError } from "axios";
 
 interface Fornecedor {
-  id: number;
+  idFornecedor: number;
   nome: string;
   cnpj: string;
-  contato: string;
+  telefone: string;
+  email: string;
+  endereco: string;
 }
 
 export default function Fornecedores() {
   const [filtroCampo, setFiltroCampo] = useState<string>("fornecedor");
   const [filtroValor, setFiltroValor] = useState<string>("");
-
   const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
   const [erro, setErro] = useState<string>("");
+  const [loadingExcluir, setLoadingExcluir] = useState<number | null>(null);
 
   const navigate = useNavigate();
   useAtalhosGlobais();
 
-  // 🔍 Buscar fornecedores da API
   const buscarFornecedores = async () => {
     try {
       setErro("");
@@ -44,35 +46,44 @@ export default function Fornecedores() {
     buscarFornecedores();
   }, []);
 
-  // ❌ Excluir fornecedor com criptografia (como no módulo de usuários)
-  async function excluirFornecedor(cnpj: string) {
+  const excluirFornecedor = async (idFornecedor: number) => {
     try {
-      const cnpjCriptografado = encrypt(cnpj);
+      setLoadingExcluir(idFornecedor);
+      const idCriptografado = encrypt(String(idFornecedor));
+      await api.post("/fornecedores/excluir", { id: idCriptografado });
+      await buscarFornecedores();
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError;
 
-      await api.post("/fornecedores/excluir", { id: cnpjCriptografado });
+      if (axiosError.response) {
+        setErro("Não foi possível excluir o fornecedor");
+      } else if (axiosError.request) {
+        setErro("Erro de conexão. Tente novamente.");
+      } else {
+        setErro("Ocorreu um erro inesperado.");
+      }
 
-      // Atualiza a lista após excluir
-      buscarFornecedores();
-    } catch (error) {
       console.error("Erro ao excluir fornecedor:", error);
-      setErro("Erro ao excluir fornecedor");
+    } finally {
+      setLoadingExcluir(null);
     }
-  }
+  };
 
-  // 🔎 Filtro
+  const handleExcluir = (id: number, nome: string) => {
+    console.log("handleExcluir chamado", id, nome);
+    if (
+      window.confirm(`Tem certeza que deseja excluir o fornecedor "${nome}"?`)
+    ) {
+      excluirFornecedor(id);
+    }
+  };
+
   const fornecedoresFiltrados = fornecedores.filter((f) => {
     if (!filtroValor) return true;
-
     const valor = filtroValor.toLowerCase();
-
-    if (filtroCampo === "fornecedor") {
+    if (filtroCampo === "fornecedor")
       return f.nome.toLowerCase().includes(valor);
-    }
-
-    if (filtroCampo === "cnpj") {
-      return f.cnpj.includes(valor);
-    }
-
+    if (filtroCampo === "cnpj") return f.cnpj.includes(valor);
     return true;
   });
 
@@ -117,24 +128,27 @@ export default function Fornecedores() {
                 <tr>
                   <th>Fornecedor</th>
                   <th>CNPJ</th>
-                  <th>Contato</th>
+                  <th>Telefone</th>
+                  <th>Email</th>
+                  <th>Endereço</th>
                   <th>Editar</th>
                   <th>Excluir</th>
                 </tr>
               </thead>
-
               <tbody>
                 {fornecedoresFiltrados.map((f) => (
-                  <tr key={f.id}>
+                  <tr key={f.idFornecedor}>
                     <td>{f.nome}</td>
                     <td>{f.cnpj}</td>
-                    <td>{f.contato}</td>
+                    <td>{f.telefone}</td>
+                    <td>{f.email}</td>
+                    <td>{f.endereco}</td>
 
                     <td>
                       <button
                         className={styles.iconButton}
                         onClick={() =>
-                          navigate(`/fornecedores/editar/${f.cnpj}`)
+                          navigate(`/fornecedores/editar/${f.idFornecedor}`)
                         }
                       >
                         <img src={Editar} alt="Editar" />
@@ -144,7 +158,8 @@ export default function Fornecedores() {
                     <td>
                       <button
                         className={styles.iconButton}
-                        onClick={() => excluirFornecedor(f.cnpj)}
+                        onClick={() => handleExcluir(f.idFornecedor, f.nome)}
+                        disabled={loadingExcluir === f.idFornecedor}
                       >
                         <img src={Lixo} alt="Excluir" />
                       </button>

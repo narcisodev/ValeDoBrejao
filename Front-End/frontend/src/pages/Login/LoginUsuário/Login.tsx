@@ -33,7 +33,7 @@ export default function Login() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErro("");
+    setErro(""); // limpa erro anterior
 
     try {
       const response = await api.post<LoginResponse>("/login", {
@@ -48,14 +48,20 @@ export default function Login() {
         }
         navigate("/");
       } else {
-        setErro("Resposta inválida da API.");
+        setErro("Usuário ou senha incorretos");
       }
     } catch (error) {
       const axiosError = error as AxiosError<ErrorResponse>;
-      console.error("Erro ao fazer login:", axiosError);
-      setErro(
-        axiosError.response?.data?.mensagem || "Usuário ou senha incorretos"
-      );
+
+      if (axiosError.response) {
+        setErro("Usuário ou senha incorretos");
+      } else if (axiosError.request) {
+        setErro("Não foi possível conectar ao servidor");
+      } else {
+        setErro("Ocorreu um erro inesperado, tente novamente");
+      }
+
+      console.error("Erro ao fazer login:", error);
     }
   };
 
@@ -82,7 +88,7 @@ export default function Login() {
             onChange={(e) => setSenha(e.target.value)}
           />
 
-          {erro && <p className={styles.error}>{erro}</p>}
+          {erro && <p className={styles.errorMessage}>{erro}</p>}
 
           <div>
             <Button type="submit">Entrar</Button>

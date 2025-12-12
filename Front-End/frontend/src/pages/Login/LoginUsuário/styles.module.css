@@ -40,3 +40,18 @@ form {
   font-family: "Poppins", sans-serif;
   padding-top: 6px;
 }
+.errorMessage {
+  width: auto !important;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background-color: #ffe6e6;
+  color: #b00020;
+  border: 1px solid #b00020;
+  border-radius: 6px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
