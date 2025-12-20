@@ -7,6 +7,10 @@ import { useNavigate } from "react-router-dom";
 import { useAtalhosGlobais } from "../../../../hooks/AtalhosGlobais";
 import { api } from "../../../../services/backendAPI";
 import type { AxiosError } from "axios";
+import {
+  validarCNPJ,
+  validarEmail,
+} from "../../../../utils/fornecedorValidacoes";
 
 export default function CadastroFornecedor() {
   const navigate = useNavigate();
@@ -24,15 +28,21 @@ export default function CadastroFornecedor() {
 
   const handleChange = (field: keyof typeof form, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
-    setErros((prev) => ({ ...prev, [field]: "" }));
+    setErros((prev) => ({ ...prev, [field]: "", geral: "" }));
   };
 
   const validarFormulario = (): boolean => {
     const novosErros: { [key: string]: string } = {};
 
     if (!form.nome) novosErros.nome = "Nome obrigatório";
+
     if (!form.cnpj) novosErros.cnpj = "CNPJ obrigatório";
+    else if (!validarCNPJ(form.cnpj)) novosErros.cnpj = "CNPJ inválido";
+
     if (!form.telefone) novosErros.telefone = "Telefone obrigatório";
+
+    if (form.email && !validarEmail(form.email))
+      novosErros.email = "Email inválido";
 
     setErros(novosErros);
     return Object.keys(novosErros).length === 0;
@@ -99,18 +109,32 @@ export default function CadastroFornecedor() {
                 type="email"
                 value={form.email}
                 onChange={(e) => handleChange("email", e.target.value)}
+                error={erros.email}
               />
               <Input
                 label="Endereço"
                 placeholder="Digite o endereço..."
                 value={form.endereco}
                 onChange={(e) => handleChange("endereco", e.target.value)}
+                error={erros.endereco}
               />
             </div>
 
-            {erros.geral && <p className={styles.error}>{erros.geral}</p>}
+            {/* Mensagem de erro geral do backend */}
+            {erros.geral && (
+              <p className={styles.error} style={{ marginTop: "8px" }}>
+                {erros.geral}
+              </p>
+            )}
 
-            <div style={{ display: "flex", gap: "8px", marginTop: "16px" }}>
+            <div
+              style={{
+                display: "flex",
+                gap: "8px",
+                marginTop: "16px",
+                flexWrap: "wrap",
+              }}
+            >
               <Button
                 type="button"
                 color="red"

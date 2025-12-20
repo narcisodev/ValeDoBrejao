@@ -61,3 +61,18 @@ section {
   padding: 16px;
   color: #666;
 }
+.errorMessage {
+  width: auto !important;
+  margin-top: 12px;
+  padding: 12px;
+  margin: 6px;
+  background-color: #ffe6e6;
+  color: #b00020;
+  border: 1px solid #b00020;
+  border-radius: 6px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}

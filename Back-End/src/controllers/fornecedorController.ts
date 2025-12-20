@@ -1,6 +1,6 @@
-// src/controllers/fornecedorController.ts
 import { Request, Response } from "express";
 import { FornecedoresModel } from "../models/fornecedorModel";
+import { decrypt } from "../utils/crypto"; // ajuste o caminho conforme sua pasta
 
 export const FornecedoresController = {
   async listar(req: Request, res: Response) {
@@ -42,8 +42,11 @@ export const FornecedoresController = {
         return res
           .status(400)
           .json({ mensagem: "ID do fornecedor é obrigatório" });
+      const idDescriptografado = Number(decrypt(id));
+      if (isNaN(idDescriptografado))
+        return res.status(400).json({ mensagem: "ID inválido" });
 
-      await FornecedoresModel.excluir(Number(id));
+      await FornecedoresModel.excluir(idDescriptografado);
       res.json({ mensagem: "Fornecedor excluído com sucesso" });
     } catch (error) {
       console.error(error);

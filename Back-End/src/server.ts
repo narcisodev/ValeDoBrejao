@@ -5,6 +5,7 @@ import funcionariosRoutes from "./routes/funcionarioRoutes";
 import loginRoutes from "./routes/loginRoutes";
 import { auth } from "./middlewares/auth";
 import fornecedorRoutes from "./routes/fornecedorRoutes";
+import produtoRoutes from "./routes/produtoRoutes";
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use("/login", loginRoutes);
 
 app.use("/funcionarios", auth, funcionariosRoutes);
 app.use("/fornecedores", auth, fornecedorRoutes);
+app.use("/produtos", auth, produtoRoutes);
 
 const PORT = process.env.API_PORT;
 
