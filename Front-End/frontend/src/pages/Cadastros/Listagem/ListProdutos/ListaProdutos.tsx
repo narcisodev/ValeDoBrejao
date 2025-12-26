@@ -11,11 +11,14 @@ import { useAtalhosGlobais } from "../../../../hooks/AtalhosGlobais";
 import { api } from "../../../../services/backendAPI";
 
 interface Produto {
-  id: number;
+  idProduto: number;
   descricao: string;
-  codigo: string;
-  estoque: number;
-  preco: number;
+  categoria: string;
+  marca: string;
+  preco_venda: number;
+  estoque_atual: number;
+  estoque_minimo: number;
+  codigo_barras: string;
 }
 
 export default function Produtos() {
@@ -42,11 +45,11 @@ export default function Produtos() {
     buscarProdutos();
   }, []);
 
-  const handleExcluir = async (id: number) => {
+  const handleExcluir = async (idProduto: number) => {
     if (!window.confirm("Deseja realmente excluir este produto?")) return;
 
     try {
-      await api.post("/produtos/excluir", { id });
+      await api.post("/produtos/excluir", { id: idProduto });
       await buscarProdutos();
     } catch (error) {
       console.error(error);
@@ -57,10 +60,16 @@ export default function Produtos() {
   const produtosFiltrados = produtos.filter((p) => {
     const valor = filtroValor.toLowerCase();
     if (!valor) return true;
+
     if (filtroCampo === "descricao")
       return p.descricao.toLowerCase().includes(valor);
-    if (filtroCampo === "codigo") return p.codigo.toLowerCase().includes(valor);
-    if (filtroCampo === "baixoEstoque") return p.estoque < 5;
+
+    if (filtroCampo === "codigo")
+      return p.codigo_barras.toLowerCase().includes(valor);
+
+    if (filtroCampo === "baixoEstoque")
+      return p.estoque_atual <= p.estoque_minimo;
+
     return true;
   });
 
@@ -73,7 +82,7 @@ export default function Produtos() {
             label="Filtrar por:"
             options={[
               { label: "Descrição", value: "descricao" },
-              { label: "Código", value: "codigo" },
+              { label: "Código de Barras", value: "codigo" },
               { label: "Baixo estoque", value: "baixoEstoque" },
             ]}
             value={filtroCampo}
@@ -114,15 +123,17 @@ export default function Produtos() {
               </thead>
               <tbody>
                 {produtosFiltrados.map((p) => (
-                  <tr key={p.id}>
+                  <tr key={p.idProduto}>
                     <td>{p.descricao}</td>
-                    <td>{p.codigo}</td>
-                    <td>{p.estoque}</td>
-                    <td>{p.preco.toFixed(2)}</td>
+                    <td>{p.codigo_barras}</td>
+                    <td>{p.estoque_atual}</td>
+                    <td>{Number(p.preco_venda).toFixed(2)}</td>
                     <td>
                       <button
                         className={styles.iconButton}
-                        onClick={() => navigate(`/produtos/editar/${p.id}`)}
+                        onClick={() =>
+                          navigate(`/produtos/editar/${p.idProduto}`)
+                        }
                       >
                         <img src={Editar} alt="Editar" />
                       </button>
@@ -130,7 +141,7 @@ export default function Produtos() {
                     <td>
                       <button
                         className={styles.iconButton}
-                        onClick={() => handleExcluir(p.id)}
+                        onClick={() => handleExcluir(p.idProduto)}
                       >
                         <img src={Lixo} alt="Excluir" />
                       </button>
@@ -139,6 +150,7 @@ export default function Produtos() {
                 ))}
               </tbody>
             </table>
+
             {erro && <p className={styles.errorMessage}>{erro}</p>}
           </div>
         </div>

@@ -6,7 +6,7 @@ interface ButtonProps {
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
-  color?: "default" | "red";
+  color?: "default" | "red" | "blue";
 }
 
 export default function Button({

@@ -18,6 +18,23 @@ export const FornecedoresModel = {
     return rows;
   },
 
+  async buscar(termo: string): Promise<FornecedorRow[]> {
+    const like = `%${termo}%`;
+
+    const [rows] = await db.execute<FornecedorRow[]>(
+      `
+    SELECT idFornecedor, nome, cnpj, telefone
+    FROM fornecedores
+    WHERE nome LIKE ? OR cnpj LIKE ?
+    ORDER BY nome
+    LIMIT 10
+    `,
+      [like, like]
+    );
+
+    return rows;
+  },
+
   async buscarPorId(id: number): Promise<FornecedorRow | null> {
     const [rows] = await db.execute<FornecedorRow[]>(
       "SELECT idFornecedor, nome, cnpj, telefone, email, endereco FROM fornecedores WHERE idFornecedor = ? LIMIT 1",

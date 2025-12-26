@@ -26,6 +26,14 @@
   background-color: #b93d39;
 }
 
+.blue {
+  background-color: #4d7adb;
+}
+
+.blue:hover {
+  background-color: #3c68c7;
+}
+
 .button:disabled {
   background-color: #ccc;
   cursor: not-allowed;

@@ -1,0 +1,20 @@
+h1 {
+  color: #513928;
+}
+.logo {
+  width: 216px;
+}
+
+.principal {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+}
+
+.conteudo {
+  justify-content: center;
+  text-align: center;
+}

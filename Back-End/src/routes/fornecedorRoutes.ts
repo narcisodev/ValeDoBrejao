@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { FornecedoresController } from "../controllers/fornecedorController";
-import { auth } from "../middlewares/auth";
 
 const router = Router();
 
-router.get("/", auth, FornecedoresController.listar);
-router.post("/cadastrar", auth, FornecedoresController.cadastrar);
-router.post("/excluir", auth, FornecedoresController.excluir);
+router.get("/", FornecedoresController.listar);
+router.get("/buscar", FornecedoresController.buscar);
+router.post("/cadastrar", FornecedoresController.cadastrar);
+router.post("/excluir", FornecedoresController.excluir);
 
 export default router;

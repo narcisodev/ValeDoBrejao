@@ -3,52 +3,81 @@ import { RowDataPacket, OkPacket } from "mysql2";
 
 export interface ProdutoRow extends RowDataPacket {
   idProduto: number;
-  nome: string;
-  categoria?: string;
-  marca?: string;
+  descricao: string;
+  categoria: string | null;
+  marca: string | null;
   preco_venda: number;
-  preco_custo?: number;
-  unidade_medida: "un" | "ml" | "l" | "kg" | "g";
+  codigo_barras: string | null;
   estoque_atual: number;
-  estoque_minimo: number;
-  ativo: boolean;
+  ativo: number;
 }
 
-export const ProdutoModel = {
+export const ProdutosModel = {
   async listar(): Promise<ProdutoRow[]> {
     const [rows] = await db.execute<ProdutoRow[]>(
-      `SELECT idProduto, nome, categoria, marca, preco_venda, preco_custo, unidade_medida, estoque_atual, estoque_minimo, ativo
-       FROM produtos`
+      `
+      SELECT 
+        idProduto,
+        descricao,
+        categoria,
+        marca,
+        preco_venda,
+        codigo_barras,
+        estoque_atual,
+        ativo
+      FROM produtos
+      `
+    );
+    return rows;
+  },
+
+  async buscar(termo: string): Promise<ProdutoRow[]> {
+    const like = `%${termo}%`;
+    const [rows] = await db.execute<ProdutoRow[]>(
+      `
+      SELECT 
+        idProduto,
+        descricao,
+        categoria,
+        marca,
+        preco_venda,
+        codigo_barras,
+        estoque_atual,
+        ativo
+      FROM produtos
+      WHERE 
+        descricao LIKE ?
+        OR codigo_barras LIKE ?
+      `,
+      [like, like]
     );
     return rows;
   },
 
   async cadastrar(produto: Omit<ProdutoRow, "idProduto">): Promise<OkPacket> {
     const {
-      nome,
+      descricao,
       categoria,
       marca,
       preco_venda,
-      preco_custo,
-      unidade_medida,
+      codigo_barras,
       estoque_atual,
-      estoque_minimo,
       ativo,
     } = produto;
 
     const [result] = await db.execute<OkPacket>(
-      `INSERT INTO produtos
-        (nome, categoria, marca, preco_venda, preco_custo, unidade_medida, estoque_atual, estoque_minimo, ativo)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `
+      INSERT INTO produtos
+      (descricao, categoria, marca, preco_venda, codigo_barras, estoque_atual, ativo)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+      `,
       [
-        nome,
+        descricao,
         categoria,
         marca,
         preco_venda,
-        preco_custo,
-        unidade_medida,
+        codigo_barras,
         estoque_atual,
-        estoque_minimo,
         ativo,
       ]
     );
@@ -56,49 +85,14 @@ export const ProdutoModel = {
     return result;
   },
 
-  async editar(
-    id: number,
-    produto: Partial<Omit<ProdutoRow, "idProduto">>
-  ): Promise<OkPacket> {
-    const {
-      nome,
-      categoria,
-      marca,
-      preco_venda,
-      preco_custo,
-      unidade_medida,
-      estoque_atual,
-      estoque_minimo,
-      ativo,
-    } = produto;
-
-    const [result] = await db.execute<OkPacket>(
-      `UPDATE produtos SET
-        nome = ?, 
-        categoria = ?, 
-        marca = ?, 
-        preco_venda = ?, 
-        preco_custo = ?, 
-        unidade_medida = ?, 
-        estoque_atual = ?, 
-        estoque_minimo = ?, 
-        ativo = ?
-       WHERE idProduto = ?`,
-      [
-        nome,
-        categoria,
-        marca,
-        preco_venda,
-        preco_custo,
-        unidade_medida,
-        estoque_atual,
-        estoque_minimo,
-        ativo,
-        id,
-      ]
+  async vincularFornecedor(idProduto: number, idFornecedor: number) {
+    await db.execute(
+      `
+    INSERT INTO produto_fornecedor (idProduto, idFornecedor)
+    VALUES (?, ?)
+    `,
+      [idProduto, idFornecedor]
     );
-
-    return result;
   },
 
   async excluir(id: number): Promise<OkPacket> {
@@ -107,13 +101,5 @@ export const ProdutoModel = {
       [id]
     );
     return result;
-  },
-  async buscarPorId(id: number): Promise<ProdutoRow | null> {
-    const [rows] = await db.execute<ProdutoRow[]>(
-      `SELECT idProduto, nome, categoria, marca, preco_venda, preco_custo, unidade_medida, estoque_atual, estoque_minimo, ativo
-       FROM produtos WHERE idProduto = ? LIMIT 1`,
-      [id]
-    );
-    return rows.length > 0 ? rows[0] : null;
   },
 };
